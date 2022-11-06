@@ -34,3 +34,10 @@ footer{
     height: 80px;
     margin: 16px;
 }
+
+@media screen and (max-width: 580px){
+    footer img{
+        width: 70%!important;
+        height: 70%!important;
+    }
+}
