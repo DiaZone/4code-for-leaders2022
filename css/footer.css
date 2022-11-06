@@ -1,0 +1,36 @@
+.col{
+    text-align: center;
+    vertical-align: center;
+}
+
+.col p{
+    text-align: center;
+    vertical-align: center;
+}
+
+footer{
+    width: calc(100% - 24px);
+    margin: 8px 18px 8px 8px;
+    transform: none !important;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 12px rgb(0 0 0 / 4%), 0px 12px 12px rgb(0 0 0 / 4%);
+    border-radius: 4px;
+}
+
+.forcode-logo{
+    margin: 16px;
+    width: 120px;
+    height: 60px;
+}
+
+.lct-logo{
+    margin: 16px;
+    height: 80px;
+    width: 220px;
+}
+
+.vdnkh-logo{
+    width: 80px;
+    height: 80px;
+    margin: 16px;
+}

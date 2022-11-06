@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Интерактивная карта ВДНХ">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Интерактивная карта</title>
+    <link rel="shortcut icon" href="images/vdnkhlogo.svg" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/header.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/footer.css">
+    <script defer src='js/bootstrap.bundle.js'></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css' rel='stylesheet'>
+    <script defer src="js/accessToken.js"></script>
+    <script defer src="js/data.js"></script>
+    <script defer src="js/script.js"></script>
+    <script defer src="js/default-routes.js"></script>
+</head>
+
+<body>
+    <header class="bg-white">
+        <a class="col-1 menu" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample"></a>
+        <div class="offcanvas head offcanvas-start" tabindex="-1" id="offcanvasExample">
+            <div class="offcanvas-header">
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Закрыть"></button>
+                <a class="logo" href="#"></a>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a class="list-group-link" href="#">События</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a class="list-group-link" href="#">Экскурсии</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a class="list-group-link" href="#">Посетителям</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a class="list-group-link" href="#">Билеты</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a class="list-group-link" href="#">Новости</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a class="list-group-link" href="#">Контакты</a>
+                    </li>
+                    <li class="list-group-item">
+                        <a class="list-group-link" href="#">Карта</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+            <div class="container head">
+                <div class=" head-div d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <a class="logo" href="#"></a>
+                    <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                        <li>
+                            <a class="nav-link col" href="#">События</a>
+                        </li>
+                        <li>
+                            <a class="nav-link col" href="#">Экскурсии</a>
+                        </li>
+                        <li>
+                            <a class="nav-link col" href="#">Посетителям</a>
+                        </li>
+                        <li>
+                            <a class="nav-link col" href="#">Билеты</a>
+                        </li>
+                        <li>
+                            <a class="nav-link col" href="#">Новости</a>
+                        </li>
+                        <li>
+                            <a class="nav-link col" href="#">Контакты</a>
+                        </li>
+                        <li>
+                            <a class="nav-link col" href="#">Карта</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+    </header>
+
+    <main>
+        <button class="btn_filter btn btn-primary" type="submit" data-bs-toggle="modal" data-bs-target="#filterBackdrop">
+            <img class="filter_logo_white" src="images/filter_white.png" alt="Кнопка «button»">
+            <img class="filter_logo_red" src="images/filter_red.png" alt="Кнопка «button»">
+        </button>
+        <button class="col filter_reset btn btn-primary" id="button-filter-reset" type="submit">
+            Сбросить фильтр
+        </button>
+        <button class="col route_reset btn btn-primary" id="button-route-reset" onclick="showRoute()" type="submit">
+            Сбросить маршрут
+        </button>
+
+        <div class="modal fade" id="filterBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterBackdropLabel">Настройка фильтра</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="accordion" id="accordionFilter">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading-filter-one">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilterOne" aria-expanded="true" aria-controls="collapseFilterOne">
+                                        Категории:
+                                    </button>
+                                </h2>
+
+                                <div id="collapseFilterOne" class="accordion-collapse collapse show" aria-labelledby="heading-filter-one" data-bs-parent="#accordionFilter">
+                                    <div class="filter_class accordion-body" id="firstFilter-acc">
+
+                                        <div id="filter-group" class="filter-group"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="col div_accordion btn btn-primary" onclick="removeHash()" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Маршрут
+        </button>
+
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Построение маршрута</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="advanced-routes-changer modal-body">
+                        <div class="advancedroutes form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="adv-routes" onchange='showOrHideAdvancedRoutes("adv-routes-div", "adv-routes", "default-routes");'>
+                            <label class="form-check-label" for="adv-routes">Персональные маршруты</label>
+                        </div>
+                        <div id="def-routes-div">
+                            <div id="default-routes">
+                                <p class="fw-bold">Тематические маршруты:</p>
+                                <div class="row text-center position-relative border">
+                                    <img class= "routeimgleft col-md-6" src="https://vdnh.ru/upload/iblock/c36/c362022960aa985c94a875bf25c62f95.png" alt="ВДНХ о России">
+                                    <div class="col-md-8 info-about-route">
+                                        <div class="row">
+                                            <h3>ВДНХ о России</h3>
+                                        </div>
+                                        <div class="def-route-btn-div">
+                                            <button class="btn btn-primary btn-default-way" onclick="window.location.href +='#VDNKHoRossii'; chooseDefaultRoute()" type="button" data-bs-toggle="modal"  data-bs-dismiss="modal" data-bs-target="#chooseFromWay">Показать маршрут</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row text-center position-relative border">
+                                    <div class="col-md-8 info-about-route">
+                                        <div class="row">
+                                            <h3>Москвовед 2.0</h3>
+                                        </div>
+                                        <div class="def-route-btn-div">
+                                            <button class="btn btn-primary btn-default-way" onclick="window.location.href +='#Moskvoved-2-0'; chooseDefaultRoute()" type="button" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#chooseFromWay">Показать маршрут</button>
+                                        </div>
+                                    </div>
+                                    <img class= "routeimgright col-md-6 col-md-offset-4" src="https://vdnh.ru/upload/iblock/59c/59ca9b9012ce5c6d69fe8169c52118cb.png" alt="Москвовед 2.0">
+                                </div>
+
+                                <div class="row text-center position-relative border">
+                                    <img class= "routeimgleft col-md-6" src="https://vdnh.ru/upload/iblock/159/15964196479c98440af6562fa7c0aa4f.png" alt="Научиться новому">
+                                    <div class="col-md-8 info-about-route">
+                                        <div class="row">
+                                            <h3>Научиться новому</h3>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-primary btn-default-way" onclick="window.location.href +='#Nauchitsya-novomu'; chooseDefaultRoute()" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#chooseFromWay">Показать маршрут</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row text-center position-relative border">
+                                    <div class="col-md-8 info-about-route">
+                                        <div class="row">
+                                            <h3>Весело с детьми</h3>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-primary btn-default-way" onclick="window.location.href +='#Veselo-s-detmi'; chooseDefaultRoute()" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#chooseFromWay">Показать маршрут</button>
+                                        </div>
+                                    </div>
+                                    <img class= "routeimgright col-md-6 col-md-offset-4" src="https://vdnh.ru/upload/iblock/29f/29f4a436514d5de392ea819170dbf607.png" alt="Весело с детьми">
+                                </div>
+
+                                <div class="row text-center position-relative border">
+                                    <img class= "routeimgleft col-md-6" src="https://vdnh.ru/upload/iblock/f86/f86acf9558f53953bf6ebe8ed65e636a.png" alt="Для влюбленных">
+                                    <div class="col-md-8 info-about-route">
+                                        <div class="row">
+                                            <h3>Для влюбленных</h3>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-primary btn-default-way" onclick="window.location.href +='#Dlya-vlublennih'; chooseDefaultRoute()" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#chooseFromWay">Показать маршрут</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row text-center position-relative border">
+                                    <div class="col-md-8 info-about-route">
+                                        <div class="row">
+                                            <h3>Инновации</h3>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-primary btn-default-way" onclick="window.location.href +='#Innovacii'; chooseDefaultRoute()" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#chooseFromWay">Показать маршрут</button>
+                                        </div>
+                                    </div>
+                                    <img class= "routeimgright col-md-6 col-md-offset-4" src="https://vdnh.ru/upload/iblock/3fd/3fd430887b1e4101871c79fe2438f4c5.png" alt="Инновации">
+                                </div>
+
+                                <div class="row text-center position-relative border">
+                                    <img class= "routeimgleft col-md-6" src="https://vdnh.ru/upload/iblock/9c0/9c0eb6a04dc810122fa5fbcbfb7a6617.png" alt="Книгоманам">
+                                    <div class="col-md-8 info-about-route">
+                                        <div class="row">
+                                            <h3>Книгоманам</h3>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-primary btn-default-way" onclick="window.location.href +='#Knigomanam'; chooseDefaultRoute()" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#chooseFromWay">Показать маршрут</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div id="adv-routes-div">
+                            <div class="checkwaymode form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="waymode" onchange='showOrHide("waymode", "sec-acc", "sec-adv-acc", "third-acc", "third-adv-acc");'>
+                                <label class="form-check-label" for="waymode">Расширенные настройки</label>
+                            </div>
+                            <div class="accordion" id="accordionExample">
+
+
+                                <!--Характеристика-->
+                                <div class="accordion-item">
+
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            Характеристика:
+                                        </button>
+                                    </h2>
+
+                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body" id="first-acc">
+                                            <div class="age-picker form-check">
+                                                <p>Возраст:</p>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" value="" id="under18">
+                                                    <label class="form-check-label" for="under18">
+                                                        до 18
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" value="" id="from18under27">
+                                                    <label class="form-check-label" for="from18under27">
+                                                        18-27
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" value="" id="from27under35">
+                                                    <label class="form-check-label" for="from27under35">
+                                                        27-35
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" value="" id="from35under45">
+                                                    <label class="form-check-label" for="from35under45">
+                                                        35-45
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="checkbox" value="" id="from45">
+                                                    <label class="form-check-label" for="from45">
+                                                        45+
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                            <div class="count-picker input-group mb-3">
+                                                <label class="input-group-text" for="inputGroupSelect01">Количество человек</label>
+                                                <select class="form-select" id="inputGroupSelect01">
+                                                    <option selected disabled>Выберите</option>
+                                                    <option value="1">Один</option>
+                                                    <option value="2">От 2 до 4 человек</option>
+                                                    <option value="3">От 5 человек</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3 fw-bold">
+                                                <label class="form-check-label" for="input-budget">
+                                                    Бюджет:
+                                                </label>
+                                                <input type="number" min="0" value="1000" max="50000" step="100" class="form-control" id="input-budget">
+                                            </div>
+                                            <div class="mb-3 fw-bold">
+                                                <label class="form-check-label" for="input-time">
+                                                    Время на маршрут:
+                                                </label>
+                                                <input type="time" class="form-control" id="input-time">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!---->
+
+
+                                <!--Критерии времяпреповождения-->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                            Критерии времяпрепровождения:
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+
+
+
+
+                                        <!--Краткие критерии-->
+                                        <div class="accordion-body" id="sec-acc">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="museum">
+                                                <label class="form-check-label" for="museum">
+                                                    Музеи
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="fun">
+                                                <label class="form-check-label" for="fun">
+                                                    Развлекательные мероприятия и объекты
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="educating">
+                                                <label class="form-check-label" for="educating">
+                                                    Образовательная программа
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="sports">
+                                                <label class="form-check-label" for="sports">
+                                                    Спортивные объекты и мероприятия
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="foodivents">
+                                                <label class="form-check-label" for="foodivents">
+                                                    Гастрономические мероприятия
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="walk">
+                                                <label class="form-check-label" for="walk">
+                                                    Прогулка
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="kidszone">
+                                                <label class="form-check-label" for="kidszone">
+                                                    Детские площадки
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="toilet">
+                                                <label class="form-check-label" for="toilet">
+                                                    Туалет
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="food">
+                                                <label class="form-check-label" for="food">
+                                                    Приём пищи
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <!---->
+
+
+                                        <!--Развернутые критерии-->
+                                        <div class="accordion-body" id="sec-adv-acc">
+
+                                            <!--Мероприятия и активности-->
+                                            <p>Мероприятия и активности:</p>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="museum-adv">
+                                                <label class="form-check-label" for="museum-adv">
+                                                    Музейные
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="fun-adv">
+                                                <label class="form-check-label" for="fun-adv">
+                                                    Развлекательные
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="educating-adv">
+                                                <label class="form-check-label" for="educating-adv">
+                                                    Образовательные
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="sports-adv">
+                                                <label class="form-check-label" for="sports-adv">
+                                                    Спортивные
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="foodivents-adv">
+                                                <label class="form-check-label" for="foodivents-adv">
+                                                    Гастрономические
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="buisness-adv">
+                                                <label class="form-check-label" for="buisness-adv">
+                                                    Деловые
+                                                </label>
+                                            </div>
+
+                                            <!--Прием пищи-->
+                                            <p>Прием пищи:</p>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="cafe-adv">
+                                                <label class="form-check-label" for="cafe-adv">
+                                                    Кафе
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="restorants-adv">
+                                                <label class="form-check-label" for="restorants-adv">
+                                                    Рестораны
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="streetfood-adv">
+                                                <label class="form-check-label" for="streetfood-adv">
+                                                    Стритфуд
+                                                </label>
+                                            </div>
+                                            <!---->
+
+
+                                            <!--Места для прогулок-->
+
+                                            <p>Места для прогулок:</p>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="fontains-adv">
+                                                <label class="form-check-label" for="fontains-adv">
+                                                    Фонтаны
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="rocket-adv">
+                                                <label class="form-check-label" for="rocket-adv">
+                                                    Ракета
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="architect-adv">
+                                                <label class="form-check-label" for="architect-adv">
+                                                    Архитектура
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="pond-adv">
+                                                <label class="form-check-label" for="pond-adv">
+                                                    Пруды
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="botanicgarden-adv">
+                                                <label class="form-check-label" for="botanicgarden-adv">
+                                                    Ботанический сад
+                                                </label>
+                                            </div>
+
+                                            <!---->
+
+                                            <!--Сервисы-->
+                                            <p>Сервисы:</p>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="infocentr-adv">
+                                                <label class="form-check-label" for="infocentr-adv">
+                                                    Инфоцентр
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="mother-and-child-room-adv">
+                                                <label class="form-check-label" for="mother-and-child-room-adv">
+                                                    Комната матери и ребёнка
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="toilets-adv">
+                                                <label class="form-check-label" for="toilets-adv">
+                                                    Туалеты
+                                                </label>
+                                            </div>
+                                            <!---->
+
+                                        </div>
+
+                                        <!---->
+                                    </div>
+                                </div>
+
+                                <!---->
+
+                                <!--Пожелания-->
+                                <div class="accordion-item">
+
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                            Пожелания:
+                                        </button>
+                                    </h2>
+
+                                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+
+                                        <!--Краткие пожелания-->
+                                        <div class="accordion-body" id="third-acc">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="onlyfree">
+                                                <label class="form-check-label" for="onlyfree">
+                                                    Только бесплатно (не включая объекты питания)
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="electrobus">
+                                                <label class="form-check-label" for="electrobus">
+                                                    Передвижение предпочтительно на электробусах
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="electroscooter">
+                                                <label class="form-check-label" for="electroscooter">
+                                                    Передвижение предпочтительно на электросамокатах
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="fewerpeople">
+                                                <label class="form-check-label" for="fewerpeople">
+                                                    Меньше людей (для прогулок по территории)
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="moretimeoutside">
+                                                <label class="form-check-label" for="moretimeoutside">
+                                                    Больше времени на улице
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="" id="moretimeinside">
+                                                <label class="form-check-label" for="moretimeinside">
+                                                    Больше времени в помещении
+                                                </label>
+                                            </div>
+
+                                        </div>
+                                        <!---->
+
+                                        <!--Развернутые пожелания-->
+                                        <div class="accordion-body" id="third-adv-acc">
+                                            <div>
+                                                <p>Стоимость:</p>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="cost" type="radio"  id="cost-adv1" value="cost-adv1">
+                                                    <label class="form-check-label" for="cost-adv1">Только бесплатно</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="cost" type="radio"  id="cost-adv2" value="cost-adv2">
+                                                    <label class="form-check-label" for="cost-adv2">Можно платно</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="cost" type="radio" id="cost-adv3" value="cost-adv3">
+                                                    <label class="form-check-label" for="cost-adv3">Без разницы</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p>Передвижение по территории:</p>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="movement" type="radio" id="movement-adv1" value="movement-adv1">
+                                                    <label class="form-check-label" for="movement-adv1">Пешком</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="movement" type="radio" id="movement-adv2" value="movement-adv2">
+                                                    <label class="form-check-label" for="movement-adv2">Предпочтительно электробусы</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="movement" type="radio" id="movement-adv3" value="movement-adv3">
+                                                    <label class="form-check-label" for="movement-adv3">Без разницы</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p>Загруженность:</p>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="overload" type="radio" id="overload-adv1" value="overload-adv1">
+                                                    <label class="form-check-label" for="overload-adv1">Больше людей</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="overload" type="radio" id="overload-adv2" value="overload-adv2">
+                                                    <label class="form-check-label" for="overload-adv2">Меньше людей</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="overload" type="radio" id="overload-adv3" value="overload-adv3">
+                                                    <label class="form-check-label" for="overload-adv3">Без разницы</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p>Местонахождение:</p>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="overload" type="radio" id="location-adv1" value="location-adv1">
+                                                    <label class="form-check-label" for="location-adv1">Только на улице</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="overload" type="radio" id="location-adv2" value="location-adv2">
+                                                    <label class="form-check-label" for="location-adv2">Только в помещениях</label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="overload" type="radio" id="location-adv3" value="location-adv3">
+                                                    <label class="form-check-label" for="location-adv3">Без разницы</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <p>Доступная среда:</p>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="accessible" id="accessible-environment-adv1" value="accessible-environment-adv1">
+                                                    <label class="form-check-label" for="accessible-environment-adv1">Доступность объекта для людей с ОВЗ</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!---->
+
+
+                                    </div>
+                                </div>
+                                <!---->
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingFour">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                                            Начальная точка маршрута:
+                                        </button>
+                                    </h2>
+
+                                    <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+
+                                        <div class="accordion-body" id="four-acc">
+
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteStarter" id="main-entrance-arch-starter" value="main-entrance-arch-starter">
+                                                    <label class="form-check-label" for="main-entrance-arch-starter">Арка главного входа</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteStarter" id="1st-lihobor-starter" value="1st-lihobor-starter">
+                                                    <label class="form-check-label" for="1st-lihobor-starter">КПП "1-й Лихоборский"</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteStarter" id="1nd-north-starter" value="1nd-north-starter">
+                                                    <label class="form-check-label" for="1nd-north-starter">КПП "1-й Северный"</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteStarter" id="2nd-north-starter" value="2nd-north-starter">
+                                                    <label class="form-check-label" for="2nd-north-starter">КПП "2-й Северный"</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteStarter" id="sovhozniy-starter" value="sovhozniy-starter">
+                                                    <label class="form-check-label" for="sovhozniy-starter">КПП "Совхозный"</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteStarter" id="khovansky-starter" value="khovansky-starter-">
+                                                    <label class="form-check-label" for="khovansky-starter">КПП "Хованский"</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteStarter" id="north-entrance-arch-starter" value="north-entrance-arch-starter">
+                                                    <label class="form-check-label" for="north-entrance-arch-starter">Арка Северного входа</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteStarter" id="south-entrance-arch-starter" value="south-entrance-arch-starter">
+                                                    <label class="form-check-label" for="south-entrance-arch-starter">Арка Южного входа</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="heading-five">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive">
+                                            Конечная точка маршрута:
+                                        </button>
+                                    </h2>
+
+                                    <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="heading-five" data-bs-parent="#accordionExample">
+
+                                        <div class="accordion-body" id="five-acc">
+
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteEnder" id="main-entrance-arch-ender" value="main-entrance-arch-ender">
+                                                    <label class="form-check-label" for="main-entrance-arch-ender">Арка главного входа</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteEnder" id="1st-lihobor-ender" value="1st-lihobor-ender">
+                                                    <label class="form-check-label" for="1st-lihobor-ender">КПП "1-й Лихоборский"</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteEnder" id="1st-north-ender" value="1st-north-ender">
+                                                    <label class="form-check-label" for="1st-north-ender">КПП "1-й Северный"</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteEnder" id="2nd-north-ender" value="2nd-north-ender">
+                                                    <label class="form-check-label" for="2nd-north-ender">КПП "2-й Северный"</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteEnder" id="sovhozniy-ender" value="sovhozniy-ender">
+                                                    <label class="form-check-label" for="sovhozniy-ender">КПП "Совхозный"</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteEnder" id="khovansky-ender" value="khovansky-ender">
+                                                    <label class="form-check-label" for="khovansky-ender">КПП "Хованский"</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteEnder" id="north-entrance-arch-ender" value="north-entrance-arch-ender">
+                                                    <label class="form-check-label" for="north-entrance-arch-ender">Арка Северного входа</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" type="radio" name="personalRouteEnder" id="south-entrance-arch-ender" value="south-entrance-arch-ender">
+                                                    <label class="form-check-label" for="south-entrance-arch-ender">Арка Южного входа</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+                                <!---->
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Применить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="chooseFromWay" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="chooseFromWayLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="chooseFromWayLabel">Откуда построить маршрут:</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="accordion" id="accordionchooseFromWay">
+                            <div class="accordion-item">
+                                <div id="collapsechooseFromWayOne" class="accordion-collapse collapse show" aria-labelledby="heading-filter-one" data-bs-parent="#accordionFilter">
+                                    <div class="accordion-body" id="chooseFromWay-acc">
+
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="routeend-popup" id="end-main-entrance-arch-popup" value="end-main-entrance-arch">
+                                                <label class="form-check-label" for="end-main-entrance-arch-popup">Арка главного входа</label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="routeend-popup" id="end-1stLihobor-popup" value="end-1stLihobor">
+                                                <label class="form-check-label" for="end-1stLihobor-popup">КПП "1-й Лихоборский"</label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="routeend-popup" id="end-1stNorth-popup" value="end-1stNorth">
+                                                <label class="form-check-label" for="end-1stNorth-popup">КПП "1-й Северный"</label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="routeend-popup" id="end-2ndNorth-popup" value="end-2ndNorth">
+                                                <label class="form-check-label" for="end-2ndNorth-popup">КПП "2-й Северный"</label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="routeend-popup" id="end-sovhozniy-popup" value="end-sovhozniy">
+                                                <label class="form-check-label" for="end-sovhozniy-popup">КПП "Совхозный"</label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="routeend-popup" id="end-khovansky-popup" value="end-khovansky">
+                                                <label class="form-check-label" for="end-khovansky-popup">КПП "Хованский"</label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="routeend-popup" id="end-north-entrance-arch-popup" value="end-north-entrance-arch">
+                                                <label class="form-check-label" for="end-north-entrance-arch-popup">Арка Северного входа</label>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="routeend-popup" id="end-south-entrance-arch-popup" value="end-south-entrance-arch">
+                                                <label class="form-check-label" for="end-south-entrance-arch-popup">Арка Южного входа</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="button" class="btn btn-primary" id="startcoordsbutton" data-bs-dismiss="modal" onclick='createRoute()'>Применить</button>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="main-map">
+            <div id="map"></div>
+            <div id='map_simple' class='map'></div>
+        </div>
+
+
+    </main>
+
+    <footer class="bg-white">
+        <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <div class="col" >
+                        <img class="forcode-logo" src="images/4code_logo.png" alt="Логотип 4Code">
+                    </div>
+                    <div class="col">
+                        <img class="lct-logo" src="images/lct_logo.jpg" alt="Логотип ЛЦТ">
+                    </div>
+                    <div class="col">
+                        <img class="vdnkh-logo" src="images/vdnkhlogo.svg" alt="Логотип ВДНХ">
+                    </div>
+                </div>
+        </div>
+
+    </footer>

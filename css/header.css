@@ -1,0 +1,121 @@
+body, html {
+    min-height: 100%;
+    background: #E22C38;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-variant-numeric: proportional-nums;
+}
+
+header{
+    width: calc(100% - 24px);
+    margin: 8px 18px 8px 8px;
+    transform: none !important;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 12px rgb(0 0 0 / 4%), 0px 12px 12px rgb(0 0 0 / 4%);
+    border-radius: 4px;
+
+}
+
+.nav-link{
+    float: left;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: 's', sans-serif;
+    margin-right: 18px;
+    color: #E22C38 !important;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.nav{
+    display: inline-block;
+}
+
+li{
+    display: inline;
+    list-style: none;
+}
+
+*{
+    box-sizing: border-box;
+    outline: none;
+}
+
+
+.logo{
+    width: 68px;
+    height: 68px;
+    background: no-repeat url("../images/vdnkhlogo.svg") 11px center, no-repeat url("../images/vdnkhlogo.svg") 79px center;
+    margin: 6px 32px 6px 6px;
+    vertical-align: middle;
+}
+
+@media screen and (max-width: 1199px){
+    .nav-link{
+        padding:0;
+    }
+    .offcanvas{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 991px){
+    .head-div{
+        height: 80px;
+    }
+    .nav{
+        display: unset !important;
+        padding-left: 2rem;
+    }
+    .logo{
+        position: absolute;
+        left: 16px;
+        top: 8px;
+        display: unset;
+    }
+}
+
+@media screen and (max-width: 820px){
+    .head .nav{
+        display: none!important;
+    }
+    .logo{
+        display: unset;
+        position: unset;
+        left: 0;
+        top: 0;
+        margin-right: 0;
+    }
+    .menu{
+        margin-top: 25px;
+        margin-left: 10px;
+        position: absolute;
+        display: unset!important;
+    }
+    .nav-link:hover{
+        color: black;
+    }
+
+    .offcanvas{
+        display: unset;
+    }
+}
+
+.menu{
+    display: none;
+    width: 40px;
+    height: 30px;
+    background: no-repeat url("../images/menu.svg") 11px center, no-repeat url("../images/menu.svg") 79px center;
+}
+
+.list-group-link{
+    font-weight: bold;
+    color: red;
+    text-decoration: none;
+}
+
+.list-group-link:hover{
+    color: black;
+}

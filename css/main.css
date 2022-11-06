@@ -1,0 +1,287 @@
+.main{
+    position: relative;
+    margin: 10px;
+    background: #FFFFFF;
+    box-shadow: 0px 0px 12px rgb(0 0 0 / 4%), 0px 12px 12px rgb(0 0 0 / 4%);
+    border-radius: 4px;
+    min-height: 80px;
+    min-height: 80px;
+}
+
+.map{
+    margin: 0;
+
+}
+
+.main-map{
+    margin: 8px 18px 8px 8px;
+    width: calc(100% - 24px);
+    height: 1135px;
+
+}
+
+#map{
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+}
+
+.mapboxgl-ctrl-logo, .mapboxgl-ctrl-attrib-inner {
+    display: none !important;
+}
+
+.checkwaymode{
+    margin-bottom: 10px;
+}
+
+.div_accordion{
+    position: absolute;
+    z-index: 9;
+    margin: 13px 0 0 280px;
+}
+
+.btn_filter{
+    width: 40px!important;
+    height: 40px!important;
+    position: absolute;
+    z-index: 9;
+    margin: 13px 0 0 20px;
+}
+
+.btn-primary{
+    color: white;
+    box-shadow: 0 0 0 2px rgb(0 0 0 / 10%);
+    border-width: 0;
+    background-color: red;
+}
+
+.filter_reset{
+    width: 200px!important;
+    height: 40px!important;
+    position: absolute;
+    z-index: 9;
+    margin: 13px 0 0 70px;
+}
+
+.route_reset{
+    width: 200px!important;
+    height: 40px!important;
+    position: absolute;
+    z-index: 9;
+    margin: 13px 0 0 440px;
+}
+
+.tickets_btn{
+    margin-top: 10px;
+    width: 200px!important;
+}
+
+.btn-primary:hover{
+    color: red;
+    background-color: white;
+}
+
+.filter_logo_white:hover{
+    opacity: 0;
+
+}
+
+.filter_logo_red:hover{
+    opacity: 1;
+}
+
+.filter_logo_white, .filter_logo_red{
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 36px;
+    height: 36px;
+    vertical-align: middle;
+}
+
+.filter_logo_red{
+    opacity: 0;
+}
+
+.filter_logo_white{
+    opacity: 1;
+}
+
+.mapbox{
+    position: static !important;
+    margin: 10px;
+    height: calc(100% - (80px + 120px));
+}
+
+.btn{
+    width: 150px;
+    height: 40px;
+}
+
+.heading p{
+    margin: 0;
+}
+
+.card {
+    margin: 60px 60px 0 20px;
+}
+
+.active, .accordion:hover {
+    background-color: #ccc;
+}
+
+.accordion-body p{
+    font-weight: bold;
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
+.age-picker, .count-picker{
+    padding-left: 0;
+    padding-bottom: 10px!important;
+    margin-bottom: 0!important;
+}
+
+.age-picker p{
+    font-weight: bold;
+    margin-bottom: 8px;
+    margin-top: 8px;
+}
+
+#first-acc, #sec-acc, #third-acc{
+    padding: 8px 16px 8px 16px;
+}
+
+#first-adv-acc, #sec-adv-acc, #third-adv-acc{
+    padding: 8px 16px 8px 16px;
+    display: none;
+}
+
+@media screen and (min-width: 1080px){
+    .main-map{
+        height: 800px !important;
+    }
+}
+
+.btn-primary{
+    font-weight: 600;
+    font-size: 15px;
+    font-family: 's', sans-serif;
+}
+
+@media screen and (max-width: 500px){
+    .div_accordion{
+        margin-right: 0;
+        margin-top: 60px;
+        margin-left: 20px;
+    }
+    #button-route-reset{
+        margin-right: 0;
+        margin-top: 110px;
+        margin-left: 20px;
+    }
+}
+
+#adv-routes-div{
+    display: none;
+}
+
+.routeimgright{
+    width: 150px;
+    height: 140px;
+    padding-right: 20px;
+}
+
+.routeimgleft{
+    width: 150px;
+    height: 140px;
+    padding-left: 20px;
+}
+
+.row{
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin: 0 auto;
+}
+.row p{
+    font-weight: bold;
+}
+
+.btn-default-way{
+    width: 210px;
+}
+
+.info-about-route{
+    text-align: center;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+}
+
+@media screen and (max-width: 770px){
+    .row{
+        width: 100%;
+    }
+    .routeimgleft, .routeimgright{
+        width: 100px;
+        height: 97px;
+    }
+    .routeimgright{
+        padding-right: 10px;
+    }
+    .routeimgleft{
+        padding-left: 10px;
+    }
+    .info-about-route{
+        margin: 0 ;
+        width: 67%
+
+    }
+    .btn-default-way{
+        width: 170px;
+    }
+    .mapboxgl-ctrl-attrib{
+        display: none;
+    }
+}
+
+.marker {width:0; height:0;}
+
+.marker  span {
+    font-size: 10px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    box-sizing:border-box;
+    width: 35px;
+    height: 35px;
+    color:#fff;
+    background: #693;
+    border:solid 2px;
+    border-radius: 0 70% 70%;
+    box-shadow:0 0 2px #000;
+    cursor: pointer;
+    transform-origin:0 0;
+    transform: rotateZ(-135deg);
+}
+
+.marker b {transform: rotateZ(135deg)}
+
+.mapboxgl-popup {
+    max-width: 200px;
+}
+
+.mapboxgl-popup-content {
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+}
+
+@media screen and (max-width: 710px){
+    .route_reset{
+     margin-right: 0;
+     margin-top: 60px;
+     margin-left: 20px;
+    }
+}
